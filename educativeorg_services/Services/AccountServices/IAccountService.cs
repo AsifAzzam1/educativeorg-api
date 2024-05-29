@@ -10,6 +10,7 @@ namespace educativeorg_services.Services.AccountServices
 {
     public interface IAccountService
     {
+        Task<ResponseViewModel<LoginResponseViewModel>> SignIn(SignInViewModel input);
         Task<ResponseViewModel<GetUserViewModel>> SignUp(SignUpViewModel input);
     }
 }

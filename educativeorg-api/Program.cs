@@ -34,6 +34,7 @@ builder.Services.ConfigureControllers();
 
 builder.Services.ConfigureSwagger();
 
+
 builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddTransient<IAccountService, AccountService>();
@@ -50,9 +51,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseStaticFiles();
-app.UseCors();
 app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+app.UseCors();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

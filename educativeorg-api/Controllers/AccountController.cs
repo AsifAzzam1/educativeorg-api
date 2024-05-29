@@ -28,5 +28,12 @@ namespace educativeorg_api.Controllers
         {
             return await _accountService.SignUp(input);
         }
+
+
+        [HttpPost("[action]")]
+        public async Task<ResponseViewModel<LoginResponseViewModel>> SignIn(SignInViewModel input)
+        {
+            return await _accountService.SignIn(input);
+        }
     }
 }

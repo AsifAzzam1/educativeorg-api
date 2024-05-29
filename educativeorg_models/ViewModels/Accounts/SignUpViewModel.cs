@@ -22,4 +22,13 @@ namespace educativeorg_models.ViewModels.Accounts
         public bool RememberMe { get; set; }
     }
 
+    public class LoginResponseViewModel
+    {
+        public Guid UserId { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Token { get; set; }
+        public string Expiry { get; set; }
+    }
+
 }

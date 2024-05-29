@@ -1,14 +1,21 @@
 ﻿using AutoMapper;
 using educativeorg_data.Data;
+using educativeorg_data.Helpers;
+using educativeorg_models;
 using educativeorg_models.Models;
 using educativeorg_models.ViewModels;
 using educativeorg_models.ViewModels.Accounts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using static educativeorg_models.ViewModels.ExceptionResposne;
@@ -21,6 +28,7 @@ namespace educativeorg_services.Services.AccountServices
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly RoleManager<ApplicationRole> _roleManager;
+       
 
         public AccountService(EducativeOrgDbContext context, UserManager<ApplicationUser> userManager, IMapper mapper, RoleManager<ApplicationRole> roleManager)
         {
@@ -70,9 +78,50 @@ namespace educativeorg_services.Services.AccountServices
             }
         }
 
-        public async Task<ResponseViewModel<object>> SignIn(SignInViewModel input) 
+        public async Task<ResponseViewModel<LoginResponseViewModel>> SignIn(SignInViewModel input) 
         {
-            return new ResponseViewModel<object> { };
+            var user = await _context.Users.FirstAsync(_=>_.UserName == input.UserName,"Invalid Credentials");
+
+            var credentials_verified = await _userManager.CheckPasswordAsync(user, input.Password);
+            if (!credentials_verified)
+                throw new HttpStatusException(HttpStatusCode.BadRequest,"Invalid Credentials");
+
+            var roles = _context.UserRoles.Where(_ => _.UserId == user.Id).ToList();
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+                new Claim(ClaimTypes.Role,JsonConvert.SerializeObject(roles.Select(_=>_.RoleId).ToList())),
+            };
+
+            var Token = GenerateToken(claims, input.RememberMe);
+            var test = (Token.ValidTo - Token.ValidFrom).TotalSeconds.ToString();
+            return new ResponseViewModel<LoginResponseViewModel>
+            {
+                Message = "SignIn Successfull",
+                Data = new LoginResponseViewModel
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Expiry = (Token.ValidTo - Token.ValidFrom).TotalSeconds.ToString(),
+                    Token = new JwtSecurityTokenHandler().WriteToken(Token)
+        }
+            };
+        }
+
+        private JwtSecurityToken GenerateToken(Claim[] claims,bool RememberMe) 
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EducativeOrg_Constants.JWtkey));
+            var token = new JwtSecurityToken(
+                issuer: "",
+                audience: "",
+                claims: claims,
+                notBefore: DateTime.Now,
+                expires: RememberMe ? DateTime.Now.AddDays(15) : DateTime.Now.AddHours(1),
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+                );
+            return token;
         }
     }
 }

@@ -17,7 +17,6 @@ namespace educativeorg_api.Helper
         public static void ConfigureSwagger(this IServiceCollection services)
         {
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
             services.AddSwaggerGen(opts =>
             {
                 opts.SwaggerDoc("v1", new OpenApiInfo
@@ -30,7 +29,7 @@ namespace educativeorg_api.Helper
                         Name = "Educative org team",
                     }
                 });
-                opts.CustomOperationIds(x => x.ToString());
+                opts.CustomSchemaIds(x => x.ToString());
                 opts.ResolveConflictingActions(x => x.FirstOrDefault());
                 opts.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -41,18 +40,18 @@ namespace educativeorg_api.Helper
                 });
 
                 opts.AddSecurityRequirement(new OpenApiSecurityRequirement {
-        {
-            new OpenApiSecurityScheme
-        {
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = "Bearer"
-            },
-        },
-        new string[]{ }
-        }
-    });
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        },
+                    },
+                    new string[]{ }
+                    }
+                });
 
             });
         }
