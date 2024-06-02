@@ -81,8 +81,9 @@ namespace educativeorg_api.Helper
                     ValidIssuer = "",
                     ValidAudience = "",
                     ValidateIssuerSigningKey = true,
-                    ValidateAudience = true,
+                    ValidateAudience = false,
                     RequireExpirationTime = true,
+                    ValidateLifetime = true,
                 };
             });
         }
