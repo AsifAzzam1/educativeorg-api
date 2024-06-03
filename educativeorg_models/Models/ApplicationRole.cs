@@ -11,5 +11,9 @@ namespace educativeorg_models.Models
     {
         public bool Active { get; set; }
 
+        public List<Permissions> Permissions { get; set; }
+        public List<ApplicationUser> Users { get; set; }
+
+
     }
 }

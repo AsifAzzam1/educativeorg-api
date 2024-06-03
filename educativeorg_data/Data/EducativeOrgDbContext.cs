@@ -1,4 +1,5 @@
 ﻿using educativeorg_models.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -14,6 +15,22 @@ namespace educativeorg_data.Data
         public EducativeOrgDbContext(DbContextOptions<EducativeOrgDbContext> opts):base(opts)
         {
             
+        }
+
+
+        public DbSet<Permissions> Permissions { get; set; }
+        public DbSet<RolePermissions> RolePermissions { get; set; }
+
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+
+            builder.Entity<ApplicationRole>().HasMany(x => x.Permissions).WithMany().UsingEntity<RolePermissions>();
+            builder.Entity<ApplicationRole>().HasMany(x => x.Users).WithMany().UsingEntity<IdentityUserRole<Guid>>();
+
+            builder.Entity<Permissions>().HasMany(x => x.Roles).WithMany().UsingEntity<RolePermissions>();
         }
 
     }

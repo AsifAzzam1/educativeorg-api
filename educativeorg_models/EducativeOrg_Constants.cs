@@ -8,27 +8,27 @@ namespace educativeorg_models
 
 
 
-        public static Dictionary<PermissionModules, List<Permissions>> Permissions = new Dictionary<PermissionModules, List<Permissions>>
+        public static Dictionary<PermissionModules, List<PermissionsSet>> Permissions = new Dictionary<PermissionModules, List<PermissionsSet>>
         {
             {
                 PermissionModules.Common,
-                new List<Permissions>
+                new List<PermissionsSet>
                 {
-                   educativeorg_models.Permissions.CanAdd, educativeorg_models.Permissions.CanDelete, educativeorg_models.Permissions.CanUpdate, educativeorg_models.Permissions.CanGetById, educativeorg_models.Permissions.CanGetAll
+                   educativeorg_models.PermissionsSet.AddUsers, educativeorg_models.PermissionsSet.DeleteUsers, educativeorg_models.PermissionsSet.UpdateUsers, educativeorg_models.PermissionsSet.GetUserById, educativeorg_models.PermissionsSet.GetAllUsers
                 } 
             },
             {
                 PermissionModules.Accounts,
-                new List<Permissions>
+                new List<PermissionsSet>
                 {
-                   educativeorg_models.Permissions.CanAdd, educativeorg_models.Permissions.CanDelete, educativeorg_models.Permissions.CanUpdate, educativeorg_models.Permissions.CanGetById, educativeorg_models.Permissions.CanGetAll
+                   educativeorg_models.PermissionsSet.AddUsers, educativeorg_models.PermissionsSet.DeleteUsers, educativeorg_models.PermissionsSet.UpdateUsers, educativeorg_models.PermissionsSet.GetUserById, educativeorg_models.PermissionsSet.GetAllUsers
                 }
             },
 
 
         };
 
-
+   
 
     }
     

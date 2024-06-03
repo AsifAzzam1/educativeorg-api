@@ -11,13 +11,13 @@ namespace educativeorg_models
         Common,
         Accounts
     }
-    public enum Permissions
+    public enum PermissionsSet
     {
-        CanAdd,
-        CanDelete,
-        CanUpdate,
-        CanGetById,
-        CanGetAll,
+        AddUsers,
+        DeleteUsers,
+        UpdateUsers,
+        GetUserById,
+        GetAllUsers,
         //Accounts
         
 

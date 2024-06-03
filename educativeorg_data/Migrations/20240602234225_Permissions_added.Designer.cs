@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using educativeorg_data.Data;
 
@@ -11,9 +12,11 @@ using educativeorg_data.Data;
 namespace educativeorg_data.Migrations
 {
     [DbContext(typeof(EducativeOrgDbContext))]
-    partial class EducativeOrgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240602234225_Permissions_added")]
+    partial class Permissions_added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
