@@ -80,8 +80,8 @@ namespace educativeorg_api.Helper
                 jb.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EducativeOrg_Constants.JWtkey)),
-                    ValidateIssuer = false,
-                    ValidIssuer = "",
+                    ValidateIssuer = true,
+                    ValidIssuer = "https://localhost:7236",
                     ValidAudience = "",
                     ValidateIssuerSigningKey = true,
                     ValidateAudience = false,

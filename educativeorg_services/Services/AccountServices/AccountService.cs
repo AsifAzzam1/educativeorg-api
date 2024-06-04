@@ -92,6 +92,7 @@ namespace educativeorg_services.Services.AccountServices
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Role,JsonConvert.SerializeObject(roles.Select(_=>_.RoleId).ToList())),
+                new Claim(JwtRegisteredClaimNames.Iss,"https://localhost:7236"),
             };
 
             var Token = GenerateToken(claims, input.RememberMe);
