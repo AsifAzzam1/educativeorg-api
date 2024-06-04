@@ -29,6 +29,7 @@ namespace educativeorg_data.Data
 
             builder.Entity<ApplicationRole>().HasMany(x => x.Permissions).WithMany().UsingEntity<RolePermissions>();
             builder.Entity<ApplicationRole>().HasMany(x => x.Users).WithMany().UsingEntity<IdentityUserRole<Guid>>();
+            builder.Entity<ApplicationUser>().HasMany(x => x.Roles).WithMany().UsingEntity<IdentityUserRole<Guid>>();
 
             builder.Entity<Permissions>().HasMany(x => x.Roles).WithMany().UsingEntity<RolePermissions>();
         }

@@ -2,7 +2,9 @@
 using educativeorg_models;
 using educativeorg_models.Models;
 using educativeorg_models.ViewModels;
+using educativeorg_services.Services.AccountServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -110,6 +112,12 @@ namespace educativeorg_api.Helper
                         opts.SerializerSettings.ContractResolver = new DefaultContractResolver();
                         opts.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
                     }).AddJsonOptions(opt => opt.JsonSerializerOptions.PropertyNamingPolicy = null);
+        }
+
+        public static void ConfigureServices(this IServiceCollection services)
+        {
+            services.AddSingleton<IAuthorizationHandler, PermissionAuthHandler>();
+            services.AddTransient<IAccountService, AccountService>();
         }
     }
 }

@@ -28,6 +28,8 @@ builder.Services.ConfigureIdentity();
 
 builder.Services.ConfigureJWT();
 
+builder.Services.AddAuthorization();
+
 builder.Services.ConfigureCors(config);
 
 builder.Services.ConfigureControllers();
