@@ -13,7 +13,7 @@ namespace educativeorg_models
     }
     public enum PermissionsSet
     {
-        AddUsers,
+        AddUsers = 1,
         DeleteUsers,
         UpdateUsers,
         GetUserById,

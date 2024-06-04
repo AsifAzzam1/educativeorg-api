@@ -3,6 +3,7 @@ using educativeorg_models;
 using educativeorg_models.Models;
 using educativeorg_models.ViewModels;
 using educativeorg_services.Services.AccountServices;
+using educativeorg_services.Services.SeederServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -79,7 +80,7 @@ namespace educativeorg_api.Helper
                 jb.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
                 {
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(EducativeOrg_Constants.JWtkey)),
-                    ValidateIssuer = true,
+                    ValidateIssuer = false,
                     ValidIssuer = "",
                     ValidAudience = "",
                     ValidateIssuerSigningKey = true,
@@ -117,7 +118,9 @@ namespace educativeorg_api.Helper
         public static void ConfigureServices(this IServiceCollection services)
         {
             services.AddSingleton<IAuthorizationHandler, PermissionAuthHandler>();
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
             services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<ISeedService, SeedService>();
         }
     }
 }

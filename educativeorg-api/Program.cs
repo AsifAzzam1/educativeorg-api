@@ -39,7 +39,7 @@ builder.Services.ConfigureSwagger();
 
 builder.Services.AddAutoMapper(typeof(Program));
 
-builder.Services.AddTransient<IAccountService, AccountService>();
+builder.Services.ConfigureServices();
 
 var app = builder.Build();
 

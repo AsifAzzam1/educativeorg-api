@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace educativeorg_data.Data
 {
@@ -25,7 +27,6 @@ namespace educativeorg_data.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
 
             builder.Entity<ApplicationRole>().HasMany(x => x.Permissions).WithMany().UsingEntity<RolePermissions>();
             builder.Entity<ApplicationRole>().HasMany(x => x.Users).WithMany().UsingEntity<IdentityUserRole<Guid>>();

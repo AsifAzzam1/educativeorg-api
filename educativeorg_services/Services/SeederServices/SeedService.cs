@@ -2,6 +2,7 @@
 using educativeorg_models;
 using educativeorg_models.Models;
 using educativeorg_models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +22,7 @@ namespace educativeorg_services.Services.SeederServices
 
         public async Task<ResponseViewModel<object>> SeedPermissions() 
         {
-            var oldPermissions = _context.Permissions.ToList();
+            var oldPermissions = await _context.Permissions.ToListAsync();
             
 
 
@@ -59,8 +60,9 @@ namespace educativeorg_services.Services.SeederServices
                 
 
             _context.SaveChanges();
-
-            return new ResponseViewModel<object> { };
+            //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Permissions ON;");
+            //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Permissions OFF");
+            return new ResponseViewModel<object> { Message = "Permissions Seeded"};
         }
     }
 }
