@@ -11,20 +11,29 @@ namespace educativeorg_data.Helpers
 {
     public static class LinqHelper
     {
-        public static T First<T>(this IEnumerable<T> sources, Func<T, bool> predicate, string message)
+        public static T First<T>(this IEnumerable<T> sources, string message, Func<T, bool>? predicate = null)
         {
+            T? result;
+            if(predicate != null)
+                result = sources.Where(predicate).FirstOrDefault();
+            else
+                result = sources.FirstOrDefault();
 
-            var result = sources.Where(predicate).FirstOrDefault();
             if (result == null)
                 throw new HttpStatusException(System.Net.HttpStatusCode.BadRequest, message);
 
             return result!;
         }
 
-        public static async Task<T> FirstAsync<T>(this DbSet<T> sources, Expression<Func<T, bool>> predicate, string message) where T : class
+        public static async Task<T> FirstAsync<T>(this IQueryable<T> sources, string message, Func<T, bool>? predicate = null)
         {
 
-            var result = await sources.FirstOrDefaultAsync(predicate);
+            T? result;
+            if (predicate != null)
+                result =  sources.Where(predicate).FirstOrDefault();
+            else
+                result = await sources.FirstOrDefaultAsync();
+
             if (result == null)
                 throw new HttpStatusException(System.Net.HttpStatusCode.BadRequest, message);
 
