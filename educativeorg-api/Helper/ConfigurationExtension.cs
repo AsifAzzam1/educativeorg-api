@@ -3,6 +3,7 @@ using educativeorg_models;
 using educativeorg_models.Models;
 using educativeorg_models.ViewModels;
 using educativeorg_services.Services.AccountServices;
+using educativeorg_services.Services.PermissionServices;
 using educativeorg_services.Services.SeederServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -11,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
+using System.Security;
 using System.Text;
 
 namespace educativeorg_api.Helper
@@ -121,6 +123,7 @@ namespace educativeorg_api.Helper
             services.AddSingleton<IAuthorizationPolicyProvider, PermissionAuthorizationPolicyProvider>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<ISeedService, SeedService>();
+            services.AddTransient<IPermissionService, PermissionService>();
         }
     }
 }
