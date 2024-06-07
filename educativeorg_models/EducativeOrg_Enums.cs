@@ -8,17 +8,20 @@ namespace educativeorg_models
 {
     public enum PermissionModules
     {
-        Common,
-        Accounts
+        Account,
+        Permissions
     }
     public enum PermissionsSet
     {
+        //Accounts
         AddUsers = 1,
         DeleteUsers,
         UpdateUsers,
         GetUserById,
         GetAllUsers,
-        //Accounts
+        //Permissions
+        GetPermissiosForRole,
+        SetPermissionsForRole
         
 
 

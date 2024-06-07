@@ -30,7 +30,7 @@ namespace educativeorg_services.Services.PermissionServices
 
                 List<string> allPermissions = _context.Permissions.Select(_ => _.Name).ToList();
                 //List<string> deniedPermissions = allPermissions.Except(role.Permissions.Select(_=>_.Name)).ToList();
-                List<string> grantedPermissions = allPermissions.Union(role.Permissions.Select(_ => _.Name)).ToList();
+                List<string> grantedPermissions = allPermissions.Intersect(role.Permissions.Select(_ => _.Name)).ToList();
 
 
                 PermissionViewModel result = new PermissionViewModel
@@ -65,19 +65,19 @@ namespace educativeorg_services.Services.PermissionServices
         }
 
 
-        public async Task<ResponseViewModel<object]>> SetPermissionsForRole(PermissionViewModel input)
+        public async Task<ResponseViewModel<object>> SetPermissionsForRole(PermissionViewModel input)
         {
             try
             {
                 var strategy = _context.Database.CreateExecutionStrategy();
                 return await strategy.Execute(async () => {
 
-                    var oldPermissions = _context.RolePermissions.Where(_=>_.RoleId == input.RoleId).ToList();
+                    var oldPermissions = await _context.RolePermissions.Where(_=>_.RoleId == input.RoleId).ToListAsync();
                     if(oldPermissions.Count > 0)
                         _context.RolePermissions.RemoveRange(oldPermissions);
 
                     var permissions = input.ModulePermissions.SelectMany(_ => _.Permissions)
-                                                             .Where(_=>_.Granted)
+                                                             .Where(_=>_.Granted).DistinctBy(_ => _.PermissionName)
                                                              .Select(_=> new RolePermissions 
                                                              {
                                                                 PermissionId = _.PermissionId,

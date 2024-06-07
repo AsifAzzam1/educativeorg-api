@@ -80,7 +80,7 @@ namespace educativeorg_services.Services.AccountServices
 
         public async Task<ResponseViewModel<LoginResponseViewModel>> SignIn(SignInViewModel input) 
         {
-            var user = await _context.Users.FirstAsync(_=>_.UserName == input.UserName,"Invalid Credentials");
+            var user = await _context.Users.FirstAsync("Invalid Credentials",_ =>_.UserName == input.UserName);
 
             var credentials_verified = await _userManager.CheckPasswordAsync(user, input.Password);
             if (!credentials_verified)

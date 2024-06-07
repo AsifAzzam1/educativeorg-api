@@ -10,7 +10,7 @@ namespace educativeorg_services.Services.PermissionServices
 {
     public interface IPermissionService
     {
-        Task<ResponseViewModel<PermissionViewModel>> GetPermissionsForRole(Guid roleId)
-Task<ResponseViewModel<object>> SetPermissionsForRole(PermissionViewModel input);
+        Task<ResponseViewModel<PermissionViewModel>> GetPermissionsForRole(Guid roleId);
+        Task<ResponseViewModel<object>> SetPermissionsForRole(PermissionViewModel input);
     }
 }

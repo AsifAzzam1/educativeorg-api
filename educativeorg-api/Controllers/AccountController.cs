@@ -1,4 +1,5 @@
-﻿using educativeorg_models.Helper;
+﻿using educativeorg_models;
+using educativeorg_models.Helper;
 using educativeorg_models.ViewModels;
 using educativeorg_models.ViewModels.Accounts;
 using educativeorg_services.Services.AccountServices;
@@ -13,14 +14,13 @@ namespace educativeorg_api.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _accountService;
-        private readonly ISeedService _seedService;
+        
 
-        public AccountController(IAccountService accountService, ISeedService seedService)
+        public AccountController(IAccountService accountService)
         {
             _accountService = accountService;
-            _seedService = seedService;
         }
-        [HasPermission(educativeorg_models.PermissionsSet.AddUsers)]
+        [HasPermission(PermissionsSet.AddUsers)]
         [HttpGet]
         public async Task<string> GetResponse()
         {
@@ -40,10 +40,7 @@ namespace educativeorg_api.Controllers
             return await _accountService.SignIn(input);
         }
 
-        [HttpGet("[action]")]
-        public async Task<ResponseViewModel<object>> SeedPermissions()
-        {
-            return await _seedService.SeedPermissions();
-        }
+       
+
     }
 }
