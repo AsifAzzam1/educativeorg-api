@@ -9,6 +9,7 @@ namespace educativeorg_api
         public AutoMapperConfiguration() 
         {
             CreateMap<ApplicationUser, GetUserViewModel>();
+            CreateMap<ApplicationRole, RoleOutputViewModel>();
         }
     }
 }
