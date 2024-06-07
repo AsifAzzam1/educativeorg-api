@@ -41,7 +41,6 @@ namespace educativeorg_api.Controllers
             return await _roleService.GetRoleById(RoleId);
         }
 
-
         [HttpDelete("{RoleId}")]
         public async Task<ResponseViewModel<object>> Delete(Guid RoleId)
         {
