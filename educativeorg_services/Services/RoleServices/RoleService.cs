@@ -21,12 +21,14 @@ namespace educativeorg_services.Services.RoleServices
         private readonly EducativeOrgDbContext _context;
         private readonly IMapper _mapper;
         private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public RoleService(EducativeOrgDbContext context, IMapper mapper, RoleManager<ApplicationRole> roleManager)
+        public RoleService(EducativeOrgDbContext context, IMapper mapper, RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _mapper = mapper;
             _roleManager = roleManager;
+            _userManager = userManager;
         }
 
         public async Task<ResponseViewModel<List<RoleOutputViewModel>>> GetAllRoles()
@@ -90,25 +92,37 @@ namespace educativeorg_services.Services.RoleServices
         {
             try
             {
-                var strategy = _context.Database.CreateExecutionStrategy();
-                return await strategy.Execute(async () =>
+                using var transaction = _context.Database.BeginTransaction();
+                try
                 {
-                    var role = _context.Roles.First("Role not found",_=>_.Id == roleId);
+
+                    var role = _context.Roles.First("Role not found", _ => _.Id == roleId);
 
                     var rolePermissions = await _context.RolePermissions.Where(_ => _.RoleId == roleId).ToListAsync();
                     if (rolePermissions.Count > 0)
                         _context.RolePermissions.RemoveRange(rolePermissions);
 
-                    var roleres = await _roleManager.DeleteAsync(role);
-                    if (roleres.Succeeded)
-                        throw new HttpStatusException(System.Net.HttpStatusCode.InternalServerError,roleres.Errors.First().Description);
+                    var usersINRole = _context.UserRoles.Where(_ => _.RoleId == roleId).ToList();
+                    if (usersINRole.Count > 0)
+                        throw new HttpStatusException(System.Net.HttpStatusCode.BadRequest, $"Role can't be deleted as you have {usersINRole.Count} users in this role")
+                            //_context.UserRoles.RemoveRange(usersINRole);
 
+                        var roleres = await _roleManager.DeleteAsync(role);
+                    if (roleres.Succeeded)
+                        throw new HttpStatusException(System.Net.HttpStatusCode.InternalServerError, roleres.Errors.First().Description);
+
+                    _context.SaveChanges();
+                    transaction.Commit();
                     return new ResponseViewModel<object>
                     {
                         Message = "Role Delted",
                     };
-                });
-                    
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
             catch (Exception)
             {

@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using educativeorg_data.Helpers;
+using System.Transactions;
 
 namespace educativeorg_services.Services.PermissionServices
 {
@@ -69,35 +70,36 @@ namespace educativeorg_services.Services.PermissionServices
         {
             try
             {
-                var strategy = _context.Database.CreateExecutionStrategy();
-                return await strategy.Execute(async () => {
-
-                    var oldPermissions = await _context.RolePermissions.Where(_=>_.RoleId == input.RoleId).ToListAsync();
-                    if(oldPermissions.Count > 0)
+                using var transaction = _context.Database.BeginTransaction();
+                try
+                {
+                    var oldPermissions = await _context.RolePermissions.Where(_ => _.RoleId == input.RoleId).ToListAsync();
+                    if (oldPermissions.Count > 0)
                         _context.RolePermissions.RemoveRange(oldPermissions);
 
                     var permissions = input.ModulePermissions.SelectMany(_ => _.Permissions)
-                                                             .Where(_=>_.Granted).DistinctBy(_ => _.PermissionName)
-                                                             .Select(_=> new RolePermissions 
+                                                             .Where(_ => _.Granted).DistinctBy(_ => _.PermissionName)
+                                                             .Select(_ => new RolePermissions
                                                              {
-                                                                PermissionId = _.PermissionId,
-                                                                RoleId = input.RoleId,
+                                                                 PermissionId = _.PermissionId,
+                                                                 RoleId = input.RoleId,
                                                              }).ToList();
 
                     if (permissions.Count > 0)
                         _context.RolePermissions.AddRange(permissions);
 
                     _context.SaveChanges();
-
+                    transaction.Commit();
                     return new ResponseViewModel<object>
                     {
                         Message = "Permissions Granted",
                     };
-                });
-
-
-
-                
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
+                }
             }
             catch (Exception)
             {

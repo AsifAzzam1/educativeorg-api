@@ -59,11 +59,11 @@ namespace educativeorg_services.Services.AccountServices
                 if (!userRes.Succeeded)
                     throw new HttpStatusException(HttpStatusCode.BadGateway,userRes.Errors.First().Description);
 
-                var rolesRes = await _userManager.AddToRoleAsync(userToadd, input.RoleName);
+                var role = _context.Roles.First("Role not found", _ => _.Id == input.RoleId);
+                var rolesRes = await _userManager.AddToRoleAsync(userToadd, role.Name);
                 if (!rolesRes.Succeeded)
                     throw new HttpStatusException(HttpStatusCode.BadRequest, rolesRes.Errors.First().Description);
-
-
+                
 
                 return new ResponseViewModel<GetUserViewModel>
                 {

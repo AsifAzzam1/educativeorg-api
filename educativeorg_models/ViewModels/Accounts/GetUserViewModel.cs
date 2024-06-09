@@ -14,5 +14,6 @@ namespace educativeorg_models.ViewModels.Accounts
         public string UserName { get; set; }
         public string Email { get; set; }
         public bool Active { get; set; }
+        public List<KeyValueEntity<Guid>>? UserRole { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace educativeorg_models.ViewModels.Accounts
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string RoleName { get; set; }
+        public Guid RoleId { get; set; }
     }
 
     public class SignInViewModel 

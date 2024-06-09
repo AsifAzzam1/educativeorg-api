@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using educativeorg_models.Models;
+using educativeorg_models.ViewModels;
 using educativeorg_models.ViewModels.Accounts;
+using System.Reflection.Metadata.Ecma335;
 
 namespace educativeorg_api
 {
@@ -8,8 +10,22 @@ namespace educativeorg_api
     {
         public AutoMapperConfiguration() 
         {
-            CreateMap<ApplicationUser, GetUserViewModel>();
+            CreateMap<ApplicationUser, GetUserViewModel>()
+                .ForMember(dest=> dest.UserRole,opt => opt.MapFrom(src => MapUserRoles(src)));
             CreateMap<ApplicationRole, RoleOutputViewModel>();
+        }
+
+        private List<KeyValueEntity<Guid>>? MapUserRoles(ApplicationUser user) 
+        {
+            if (user.Roles == null || user.Roles.Count == 0)
+                return null;
+
+            return user.Roles.Select(_ => new KeyValueEntity<Guid>
+            {
+                Id = _.Id,
+                Value = _.Name,
+                Active = true,
+            }).ToList();
         }
     }
 }
