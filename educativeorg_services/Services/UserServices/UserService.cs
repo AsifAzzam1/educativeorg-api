@@ -13,6 +13,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static educativeorg_models.ViewModels.ExceptionResposne;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace educativeorg_services.Services.UserServices
 {
@@ -101,7 +102,7 @@ namespace educativeorg_services.Services.UserServices
             }
         }
 
-        public async Task<ResponseViewModel<object>> ToggleStatus(Guid userId) 
+        public async Task<ResponseViewModel<GetUserViewModel>> ToggleStatus(Guid userId) 
         {
             try
             {
@@ -110,9 +111,10 @@ namespace educativeorg_services.Services.UserServices
                 _context.Entry(user).Property(_=>_.Active).IsModified = true;
                 _context.SaveChanges();
 
-                return new ResponseViewModel<object>
+                return new ResponseViewModel<GetUserViewModel>
                 {
-                    Message = "User Deleted"
+                    Message = "User Deleted",
+                    Data = _mapper.Map<GetUserViewModel>(user)
                 };
             }
             catch (Exception)
@@ -122,7 +124,73 @@ namespace educativeorg_services.Services.UserServices
             }
         }
 
+        public async Task<ResponseViewModel<PaginateResponseModel<GetUserViewModel>>> GetAll(FilterViewModel filter) 
+        {
+            try
+            {
+                var query = _context.Users.AsQueryable();
 
+                var res = new PaginateResponseModel<GetUserViewModel>
+                {
+                    TotalRecords = query.Count()
+                };
+
+                if (filter.Status.HasValue)
+                    query = query.Where(_ => _.Active == filter.Status.Value);
+
+                if (!string.IsNullOrWhiteSpace(filter.Query))
+                {
+                    query = query.Where(_=>_.FirstName.Contains(filter.Query) ||
+                                            _.LastName.Contains(filter.Query) ||
+                                            _.Email!.Contains(filter.Query));
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter.SortBy))
+                    query = filter.SortDesc != null && filter.SortDesc!.Value ? query.OrderByDescending(_=> filter.SortBy) : query = query.OrderBy(_=> filter.SortBy);
+               
+                if (!string.IsNullOrWhiteSpace(filter.SortBy))
+                {
+                    if(!filter.SortDesc ?? false) 
+                    {
+                        query = filter.SortBy switch
+                        {
+                            "FirstName" => query.OrderBy(_ => _.FirstName),
+                            "LastName" => query.OrderBy(_ => _.LastName),
+                            "Email" => query.OrderBy(_ => _.Email),
+                            _ => query.OrderBy(_ => _.FirstName),
+                        };
+                    }
+                    else
+                    {
+                        query = filter.SortBy switch
+                        {
+                            "FirstName" => query.OrderByDescending(_ => _.FirstName),
+                            "LastName" => query.OrderByDescending(_ => _.LastName),
+                            "Email" => query.OrderByDescending(_ => _.Email),
+                            _ => query.OrderByDescending(_ => _.FirstName),
+                        };
+                    }
+                }
+
+                if (filter.PageSize == -1)
+                    res.Data = _mapper.Map<List<GetUserViewModel>>(await query.ToListAsync());
+                else
+                    res.Data = _mapper.Map<List<GetUserViewModel>>(await query.Skip((filter.PageNo - 1) * filter.PageNo).Take(filter.PageSize).ToListAsync());
+                
+                res.RecordsAfterFilter = res.Data.Count;
+
+                return new ResponseViewModel<PaginateResponseModel<GetUserViewModel>> 
+                {
+                    Message = "Data found",
+                    Data = res
+                };
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
     }
 }

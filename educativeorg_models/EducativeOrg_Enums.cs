@@ -22,8 +22,17 @@ namespace educativeorg_models
         //Permissions
         GetPermissiosForRole,
         SetPermissionsForRole
-        
+    }
 
-
+    public enum AuditQuestionTypeEnum 
+    {
+        SingleSelect,
+        MultiSelect,
+        DropDown,
+        TrackBar,
+        TextBox,
+        TextArea,
+        DateTime,
+        TextDropDown
     }
 }

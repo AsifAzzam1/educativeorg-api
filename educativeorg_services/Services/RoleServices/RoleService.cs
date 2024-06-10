@@ -104,7 +104,7 @@ namespace educativeorg_services.Services.RoleServices
 
                     var usersINRole = _context.UserRoles.Where(_ => _.RoleId == roleId).ToList();
                     if (usersINRole.Count > 0)
-                        throw new HttpStatusException(System.Net.HttpStatusCode.BadRequest, $"Role can't be deleted as you have {usersINRole.Count} users in this role")
+                        throw new HttpStatusException(System.Net.HttpStatusCode.BadRequest, $"Role can't be deleted as you have {usersINRole.Count} users in this role");
                             //_context.UserRoles.RemoveRange(usersINRole);
 
                         var roleres = await _roleManager.DeleteAsync(role);

@@ -6,6 +6,7 @@ using educativeorg_services.Services.AccountServices;
 using educativeorg_services.Services.PermissionServices;
 using educativeorg_services.Services.RoleServices;
 using educativeorg_services.Services.SeederServices;
+using educativeorg_services.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -126,6 +127,7 @@ namespace educativeorg_api.Helper
             services.AddTransient<ISeedService, SeedService>();
             services.AddTransient<IPermissionService, PermissionService>();
             services.AddTransient<IRoleService, RoleService>();
+            services.AddTransient<IUserService, UserService>();
         }
     }
 }

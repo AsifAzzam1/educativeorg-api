@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using educativeorg_data.Data;
 
@@ -11,9 +12,11 @@ using educativeorg_data.Data;
 namespace educativeorg_data.Migrations
 {
     [DbContext(typeof(EducativeOrgDbContext))]
-    partial class EducativeOrgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240610230305_comp_and_survey")]
+    partial class comp_and_survey
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,7 +168,7 @@ namespace educativeorg_data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<bool>("Active")
+                    b.Property<bool?>("Active")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("CompanyId")
