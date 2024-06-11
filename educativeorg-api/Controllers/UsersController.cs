@@ -17,6 +17,12 @@ namespace educativeorg_api.Controllers
             _userService = userService;
         }
 
+        [HttpPost]
+        public async Task<ResponseViewModel<GetUserViewModel>> CreateUser(SignUpViewModel input)
+        {
+            return await _userService.CreateUser(input);
+        }
+
         [HttpGet("{id}")]
         public async Task<ResponseViewModel<GetUserViewModel>> GetById(Guid id) 
         {

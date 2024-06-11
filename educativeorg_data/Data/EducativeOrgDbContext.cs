@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore.SqlServer;
+using educativeorg_models.Models.Audits;
 
 namespace educativeorg_data.Data
 {
@@ -22,6 +23,12 @@ namespace educativeorg_data.Data
 
         public DbSet<Permissions> Permissions { get; set; }
         public DbSet<RolePermissions> RolePermissions { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<AuditModel> Audits { get; set; }
+        public DbSet<AuditSection> AuditSections { get; set; }
+        public DbSet<AuditQuestion> AuditQuestions { get; set; }
+        public DbSet<AuditAnswer> AuditAnswers { get; set; }
+
 
 
         protected override void OnModelCreating(ModelBuilder builder)

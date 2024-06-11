@@ -30,7 +30,7 @@ namespace educativeorg_api.Controllers
         [HttpPost("[action]")]
         public async Task<ResponseViewModel<GetUserViewModel>> SignUp(SignUpViewModel input) 
         {
-            return await _accountService.SignUp(input);
+            return await _accountService.RegisterCompany(input);
         }
 
 

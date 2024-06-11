@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using static educativeorg_models.ViewModels.ExceptionResposne;
@@ -20,16 +21,72 @@ namespace educativeorg_services.Services.UserServices
     public class UserService:IUserService
     {
         private readonly EducativeOrgDbContext _context;
-        private readonly UserManager<ApplicationUser> _userMananger;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
         public UserService(EducativeOrgDbContext context, IMapper mapper, UserManager<ApplicationUser> userMananger)
         {
             _context = context;
             _mapper = mapper;
-            _userMananger = userMananger;
+            _userManager = userMananger;
         }
 
+        public async Task<ResponseViewModel<GetUserViewModel>> CreateUser(SignUpViewModel input)
+        {
+            try
+            {
+                using (var transaction = _context.Database.BeginTransaction()) 
+                {
+                    try
+                    {
+                        var userexist = await _context.Users.FirstOrDefaultAsync(_ => _.UserName == input.Email);
+                        if (userexist != null)
+                            throw new HttpStatusException(HttpStatusCode.BadRequest, $"Username with email {input.Email} already exist");
+
+                        if (input.CompanyInfo == null || input.CompanyInfo.Id == null || input.CompanyInfo.Id == Guid.Empty)
+                            throw new HttpStatusException(HttpStatusCode.BadRequest, "Company Information not provided");
+
+
+
+                        ApplicationUser userToadd = new ApplicationUser
+                        {
+                            UserName = input.Email,
+                            Email = input.Email,
+                            Active = true,
+                            FirstName = input.FirstName,
+                            LastName = input.LastName,
+                            CompanyId = input.CompanyInfo.Id!.Value
+                        };
+
+                        var userRes = await _userManager.CreateAsync(userToadd, input.Password);
+                        if (!userRes.Succeeded)
+                            throw new HttpStatusException(HttpStatusCode.BadGateway, userRes.Errors.First().Description);
+
+                        var role = _context.Roles.First("Role not found", _ => _.Id == input.RoleId);
+                        var rolesRes = await _userManager.AddToRoleAsync(userToadd, role.Name);
+                        if (!rolesRes.Succeeded)
+                            throw new HttpStatusException(HttpStatusCode.BadRequest, rolesRes.Errors.First().Description);
+
+                        transaction.Commit();
+                        return new ResponseViewModel<GetUserViewModel>
+                        {
+                            Data = _mapper.Map<GetUserViewModel>(userToadd),
+                            Message = "User Created"
+                        };
+                    }
+                    catch (Exception)
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
 
         public async Task<ResponseViewModel<GetUserViewModel>> GetById(Guid Id) 
         {
@@ -67,15 +124,15 @@ namespace educativeorg_services.Services.UserServices
                     {
                         foreach (var item in user.UserRole)
                         {
-                            if (item.Active && !(await _userMananger.IsInRoleAsync(appUser, item.Value)))
+                            if (item.Active && !(await _userManager.IsInRoleAsync(appUser, item.Value)))
                             {
-                                var Addres = await _userMananger.AddToRoleAsync(appUser, item.Value);
+                                var Addres = await _userManager.AddToRoleAsync(appUser, item.Value);
                                 if (!Addres.Succeeded)
                                     throw new HttpStatusException(System.Net.HttpStatusCode.BadRequest, Addres.Errors.First().Description);
                             }
-                            else if (!item.Active && (await _userMananger.IsInRoleAsync(appUser, item.Value)))
+                            else if (!item.Active && (await _userManager.IsInRoleAsync(appUser, item.Value)))
                             {
-                                var removeRes = await _userMananger.RemoveFromRoleAsync(appUser, item.Value);
+                                var removeRes = await _userManager.RemoveFromRoleAsync(appUser, item.Value);
                                 if (!removeRes.Succeeded)
                                     throw new HttpStatusException(System.Net.HttpStatusCode.BadRequest, removeRes.Errors.First().Description);
                             }

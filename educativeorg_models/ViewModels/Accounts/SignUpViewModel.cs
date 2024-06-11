@@ -13,6 +13,15 @@ namespace educativeorg_models.ViewModels.Accounts
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public Guid RoleId { get; set; }
+        public CompanyViewModel CompanyInfo { get; set; }
+    }
+
+    public class CompanyViewModel 
+    {
+        public Guid? Id { get; set; } = Guid.Empty;
+        public string Title { get; set; }
+        public string Phone { get; set; }
+        public string Address { get; set; }
     }
 
     public class SignInViewModel 

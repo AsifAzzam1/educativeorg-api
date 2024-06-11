@@ -10,6 +10,7 @@ namespace educativeorg_services.Services.UserServices
 {
     public interface IUserService
     {
+        Task<ResponseViewModel<GetUserViewModel>> CreateUser(SignUpViewModel input);
         Task<ResponseViewModel<PaginateResponseModel<GetUserViewModel>>> GetAll(FilterViewModel filter);
         Task<ResponseViewModel<GetUserViewModel>> GetById(Guid Id);
         Task<ResponseViewModel<GetUserViewModel>> ToggleStatus(Guid userId);

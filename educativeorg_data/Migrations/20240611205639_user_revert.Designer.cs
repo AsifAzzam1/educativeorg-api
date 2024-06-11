@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using educativeorg_data.Data;
 
@@ -11,9 +12,11 @@ using educativeorg_data.Data;
 namespace educativeorg_data.Migrations
 {
     [DbContext(typeof(EducativeOrgDbContext))]
-    partial class EducativeOrgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611205639_user_revert")]
+    partial class user_revert
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,9 +171,6 @@ namespace educativeorg_data.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
@@ -223,8 +223,6 @@ namespace educativeorg_data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -234,192 +232,6 @@ namespace educativeorg_data.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.Audit", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("CompanyId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CompanyId");
-
-                    b.ToTable("Audits");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.AuditAnswer", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("QuestionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Sequance")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("AuditAnswers");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.AuditQuestion", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid?>("AuditSectionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("QuestionType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("SectionId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuditSectionId");
-
-                    b.ToTable("AuditQuestions");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.AuditSection", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<Guid>("AuditId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Sequence")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuditId");
-
-                    b.ToTable("AuditSections");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Company", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<bool>("Active")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("ModifiedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Title")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("educativeorg_models.Models.Permissions", b =>
@@ -512,59 +324,6 @@ namespace educativeorg_data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("educativeorg_models.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("educativeorg_models.Models.Company", "Company")
-                        .WithMany("Users")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.Audit", b =>
-                {
-                    b.HasOne("educativeorg_models.Models.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.AuditAnswer", b =>
-                {
-                    b.HasOne("educativeorg_models.Models.Audits.AuditQuestion", "Question")
-                        .WithMany("Answers")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.AuditQuestion", b =>
-                {
-                    b.HasOne("educativeorg_models.Models.Audits.AuditSection", "AuditSection")
-                        .WithMany("Questions")
-                        .HasForeignKey("AuditSectionId");
-
-                    b.Navigation("AuditSection");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.AuditSection", b =>
-                {
-                    b.HasOne("educativeorg_models.Models.Audits.Audit", "Audit")
-                        .WithMany("Sections")
-                        .HasForeignKey("AuditId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Audit");
-                });
-
             modelBuilder.Entity("educativeorg_models.Models.RolePermissions", b =>
                 {
                     b.HasOne("educativeorg_models.Models.Permissions", "Permission")
@@ -582,26 +341,6 @@ namespace educativeorg_data.Migrations
                     b.Navigation("Permission");
 
                     b.Navigation("Role");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.Audit", b =>
-                {
-                    b.Navigation("Sections");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.AuditQuestion", b =>
-                {
-                    b.Navigation("Answers");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Audits.AuditSection", b =>
-                {
-                    b.Navigation("Questions");
-                });
-
-            modelBuilder.Entity("educativeorg_models.Models.Company", b =>
-                {
-                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }

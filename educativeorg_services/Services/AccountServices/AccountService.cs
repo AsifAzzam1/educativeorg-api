@@ -38,13 +38,19 @@ namespace educativeorg_services.Services.AccountServices
             _roleManager = roleManager;
         }
 
-        public async Task<ResponseViewModel<GetUserViewModel>> SignUp(SignUpViewModel input) 
+        public async Task<ResponseViewModel<GetUserViewModel>> RegisterCompany(SignUpViewModel input) 
         {
             try
             {
                 var userexist = await _context.Users.FirstOrDefaultAsync(_=>_.UserName == input.Email);
                 if (userexist != null)
                     throw new HttpStatusException(HttpStatusCode.BadRequest, $"Username with email {input.Email} already exist");
+
+                if (input.CompanyInfo == null)
+                    throw new HttpStatusException(HttpStatusCode.BadRequest, "Company Information not provided");
+
+                var company = _mapper.Map<Company>(input.CompanyInfo);
+                _context.Companies.Add(company);
 
                 ApplicationUser userToadd = new ApplicationUser 
                 {
@@ -53,6 +59,7 @@ namespace educativeorg_services.Services.AccountServices
                     Active = true,
                     FirstName = input.FirstName, 
                     LastName = input.LastName,
+                    CompanyId = company.Id
                 };
 
                 var userRes = await _userManager.CreateAsync(userToadd,input.Password);
@@ -92,6 +99,7 @@ namespace educativeorg_services.Services.AccountServices
             {
                 new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
                 new Claim(ClaimTypes.Role,JsonConvert.SerializeObject(roles.Select(_=>_.RoleId).ToList())),
+                new Claim(ClaimTypes.System,user.CompanyId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Iss,"https://localhost:7236"),
             };
 

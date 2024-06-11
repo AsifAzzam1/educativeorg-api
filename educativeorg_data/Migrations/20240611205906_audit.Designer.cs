@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using educativeorg_data.Data;
 
@@ -11,9 +12,11 @@ using educativeorg_data.Data;
 namespace educativeorg_data.Migrations
 {
     [DbContext(typeof(EducativeOrgDbContext))]
-    partial class EducativeOrgDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240611205906_audit")]
+    partial class audit
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -168,7 +171,7 @@ namespace educativeorg_data.Migrations
                     b.Property<bool>("Active")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("CompanyId")
+                    b.Property<Guid?>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -514,13 +517,9 @@ namespace educativeorg_data.Migrations
 
             modelBuilder.Entity("educativeorg_models.Models.ApplicationUser", b =>
                 {
-                    b.HasOne("educativeorg_models.Models.Company", "Company")
+                    b.HasOne("educativeorg_models.Models.Company", null)
                         .WithMany("Users")
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Company");
+                        .HasForeignKey("CompanyId");
                 });
 
             modelBuilder.Entity("educativeorg_models.Models.Audits.Audit", b =>

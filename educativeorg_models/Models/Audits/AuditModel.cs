@@ -7,13 +7,12 @@ using System.Threading.Tasks;
 
 namespace educativeorg_models.Models.Audits
 {
-    public class Audit : BaseEntity
+    public class AuditModel : BaseEntity
     {
         public Guid CompanyId { get; set; }
         public Company Company { get; set; }
         public string Title { get; set; }
         public ICollection<AuditSection> Sections { get; set; }
-
 
     }
 }
