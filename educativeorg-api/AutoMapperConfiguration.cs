@@ -19,6 +19,8 @@ namespace educativeorg_api
             CreateMap<Company,CompanyViewModel>().ReverseMap();
 
             CreateMap<AuditModel, AuditViewModel>().ReverseMap();
+
+            CreateMap<CompanyViewModel, Company>().ReverseMap();
         }
 
         private List<KeyValueEntity<Guid>>? MapUserRoles(ApplicationUser user) 

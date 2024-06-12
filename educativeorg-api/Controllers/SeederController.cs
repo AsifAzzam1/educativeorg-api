@@ -22,5 +22,11 @@ namespace educativeorg_api.Controllers
         {
             return await _seedService.SeedPermissions();
         }
+
+        [HttpGet("[action]")]
+        public async Task<ResponseViewModel<object>> SeedBaseUser()
+        {
+            return await _seedService.SeedBaseData();
+        }
     }
 }

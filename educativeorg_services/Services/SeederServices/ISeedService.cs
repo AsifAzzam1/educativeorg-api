@@ -9,6 +9,7 @@ namespace educativeorg_services.Services.SeederServices
 {
     public interface ISeedService
     {
+        Task<ResponseViewModel<object>> SeedBaseData();
         Task<ResponseViewModel<object>> SeedPermissions();
     }
 }

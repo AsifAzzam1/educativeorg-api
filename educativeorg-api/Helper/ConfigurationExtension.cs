@@ -4,6 +4,7 @@ using educativeorg_models.Models;
 using educativeorg_models.ViewModels;
 using educativeorg_services.Services.AccountServices;
 using educativeorg_services.Services.Audit.AuditServices;
+using educativeorg_services.Services.CompanyServices;
 using educativeorg_services.Services.PermissionServices;
 using educativeorg_services.Services.RoleServices;
 using educativeorg_services.Services.SeederServices;
@@ -130,6 +131,7 @@ namespace educativeorg_api.Helper
             services.AddTransient<IRoleService, RoleService>();
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IAuditService, AuditService>();
+            services.AddTransient<ICompanyService, CompanyService>();
         }
     }
 }
