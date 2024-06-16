@@ -38,6 +38,9 @@ namespace educativeorg_models.ViewModels.Accounts
         public string LastName { get; set; }
         public string Token { get; set; }
         public string Expiry { get; set; }
+        public Guid CompanyId { get; set; }
+        public string CompanyName { get; set; }
+
     }
 
 }

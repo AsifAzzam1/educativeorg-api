@@ -87,7 +87,7 @@ namespace educativeorg_services.Services.AccountServices
 
         public async Task<ResponseViewModel<LoginResponseViewModel>> SignIn(SignInViewModel input) 
         {
-            var user = await _context.Users.FirstAsync("Invalid Credentials",_ =>_.UserName == input.UserName);
+            var user = await _context.Users.Where(_ => _.UserName == input.UserName, "Invalid Credentials").Include(_=>_.Company).FirstAsync();
 
             var credentials_verified = await _userManager.CheckPasswordAsync(user, input.Password);
             if (!credentials_verified)
@@ -114,7 +114,9 @@ namespace educativeorg_services.Services.AccountServices
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Expiry = (Token.ValidTo - Token.ValidFrom).TotalSeconds.ToString(),
-                    Token = new JwtSecurityTokenHandler().WriteToken(Token)
+                    Token = new JwtSecurityTokenHandler().WriteToken(Token),
+                    CompanyId = user.CompanyId,
+                    CompanyName = user.Company.Title
         }
             };
         }
