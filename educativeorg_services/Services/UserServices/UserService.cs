@@ -1,9 +1,11 @@
 ﻿using AutoMapper;
 using educativeorg_data.Data;
 using educativeorg_data.Helpers;
+using educativeorg_models.Helper;
 using educativeorg_models.Models;
 using educativeorg_models.ViewModels;
 using educativeorg_models.ViewModels.Accounts;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -23,12 +25,14 @@ namespace educativeorg_services.Services.UserServices
         private readonly EducativeOrgDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
+        private readonly IHttpContextAccessor _httpcontextaccessor;
 
-        public UserService(EducativeOrgDbContext context, IMapper mapper, UserManager<ApplicationUser> userMananger)
+        public UserService(EducativeOrgDbContext context, IMapper mapper, UserManager<ApplicationUser> userMananger, IHttpContextAccessor httpcontextaccessor)
         {
             _context = context;
             _mapper = mapper;
             _userManager = userMananger;
+            _httpcontextaccessor = httpcontextaccessor;
         }
 
         public async Task<ResponseViewModel<GetUserViewModel>> CreateUser(SignUpViewModel input)
@@ -185,7 +189,8 @@ namespace educativeorg_services.Services.UserServices
         {
             try
             {
-                var query = _context.Users.AsQueryable();
+                var companyId = _httpcontextaccessor.GetCompanyId()!.Value;
+                var query = _context.Users.Where(_=>_.Active && _.CompanyId == companyId);
 
                 var res = new PaginateResponseModel<GetUserViewModel>
                 {
